@@ -4,6 +4,7 @@ import Weather from './components/Weather'
 import SettingsButton from './components/SettingsButton'
 import SidebarToggle from './components/SidebarToggle'
 import Sidebar from './components/Sidebar'
+import Settings from './components/Settings'
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -18,6 +19,7 @@ function App() {
         onClick={() => setSidebarOpen(prev => !prev)}
       />
       <Sidebar isOpen={sidebarOpen} />
+      {settingsOpen && <Settings onClose={() => setSettingsOpen(false)} />}
     </main>
   )
 }
