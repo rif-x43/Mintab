@@ -12,6 +12,10 @@ export const DEFAULTS = {
   showBookmarks: false,
   expandBookmarks: false,
   bookmarkFolder: 'all',
+  useSystemTheme: false,
+  themeMode: 'dark',
+  useCustomBackground: false,
+  backgroundImage: '',
 }
 
 export const CITIES = {
@@ -27,6 +31,12 @@ export const useSettings = create(
       settings: DEFAULTS,
       saveSettings: (next) => set({ settings: { ...DEFAULTS, ...next } }),
     }),
-    { name: 'mintab-settings' }
+    {
+      name: 'mintab-settings',
+      merge: (persisted, current) => ({
+        ...current,
+        settings: { ...DEFAULTS, ...(persisted?.settings || {}) },
+      }),
+    }
   )
 )

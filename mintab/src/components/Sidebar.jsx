@@ -30,21 +30,21 @@ function Calendar() {
         year === today.getFullYear()
 
     return (
-        <div className="bg-[#141414] rounded-2xl p-5 w-(--card-w) min-h-[calc(var(--card-w)*0.75)] pointer-events-auto flex flex-col justify-between">
+        <div className="bg-card rounded-2xl p-5 w-(--card-w) min-h-[calc(var(--card-w)*0.75)] pointer-events-auto flex flex-col justify-between">
             {/* Month nav */}
             <div className="flex items-center justify-between mb-4">
                 <button
                     onClick={() => setCurrent(new Date(year, month - 1))}
-                    className="text-[#f6f6f6] opacity-50 hover:opacity-100 transition-opacity"
+                    className="text-fg opacity-50 hover:opacity-100 transition-opacity"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                     </svg>
                 </button>
-                <span className="text-[#f6f6f6] text-base font-normal tracking-wide">{monthName}</span>
+                <span className="text-fg text-base font-normal tracking-wide">{monthName}</span>
                 <button
                     onClick={() => setCurrent(new Date(year, month + 1))}
-                    className="text-[#f6f6f6] opacity-30 hover:opacity-100 transition-opacity"
+                    className="text-fg opacity-30 hover:opacity-100 transition-opacity"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -55,7 +55,7 @@ function Calendar() {
             {/* Weekday labels */}
             <div className="grid grid-cols-7 mb-2">
                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
-                    <span key={i} className="text-center text-[#f6f6f6] text-xs opacity-60">{d}</span>
+                    <span key={i} className="text-center text-fg text-xs opacity-60">{d}</span>
                 ))}
             </div>
 
@@ -66,10 +66,10 @@ function Calendar() {
                         <span
                             className={`w-7 h-7 flex items-center justify-center text-sm rounded-full
                 ${isToday(cell.day, cell.current)
-                                    ? 'bg-[#f6f6f6] text-[#121212] font-medium'
+                                    ? 'bg-fg text-bg font-medium'
                                     : cell.current
-                                        ? 'text-[#f6f6f6]'
-                                        : 'text-[#f6f6f6] opacity-20'}`}
+                                        ? 'text-fg'
+                                        : 'text-fg opacity-20'}`}
                         >
                             {cell.day}
                         </span>
@@ -135,22 +135,22 @@ function Tasks() {
     }
 
     return (
-        <div className="bg-[#141414] rounded-2xl p-5 w-(--card-w) pointer-events-auto flex flex-col">
-            <p className="text-[#f6f6f6] text-base font-normal text-center mb-4 tracking-widest shrink-0">Tasks</p>
+        <div className="bg-card rounded-2xl p-5 w-(--card-w) pointer-events-auto flex flex-col">
+            <p className="text-fg text-base font-normal text-center mb-4 tracking-widest shrink-0">Tasks</p>
 
             {/* Fixed-height card: list scrolls inside it */}
             <div className="flex flex-col gap-2 h-[178px] shrink-0 overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden">
                 {tasks.map(task => (
                     <div
                         key={task.id}
-                        className={`w-full bg-[#1b1b1b] rounded-[9px] px-3 py-2 flex items-start justify-between gap-2 shrink-0 ${task.done ? 'opacity-40' : ''}`}
+                        className={`w-full bg-item rounded-[9px] px-3 py-2 flex items-start justify-between gap-2 shrink-0 ${task.done ? 'opacity-40' : ''}`}
                     >
                         <div className="flex flex-col">
-                            <span className={`text-[#f6f6f6] text-base leading-snug ${task.done ? 'line-through' : ''}`}>
+                            <span className={`text-fg text-base leading-snug ${task.done ? 'line-through' : ''}`}>
                                 {task.text}
                             </span>
                             {task.due && (
-                                <span className={`text-[#efefef] text-xs opacity-70 ${task.done ? 'line-through' : ''}`}>
+                                <span className={`text-fg text-xs opacity-70 ${task.done ? 'line-through' : ''}`}>
                                     {formatDue(task.due)}
                                 </span>
                             )}
@@ -158,10 +158,10 @@ function Tasks() {
                         <button
                             onClick={() => toggle(task.id)}
                             className={`w-5 h-5 shrink-0 mt-0.5 rounded-[5px] border flex items-center justify-center transition-colors cursor-pointer
-                ${task.done ? 'bg-[#f6f6f6] border-[#f6f6f6]' : 'bg-[#1e1e1e] border-[#f6f6f6]'}`}
+                ${task.done ? 'bg-fg border-fg' : 'bg-item border-fg'}`}
                         >
                             {task.done && (
-                                <svg className="w-3 h-3 text-[#121212]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                <svg className="w-3 h-3 text-bg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                                 </svg>
                             )}
@@ -170,21 +170,21 @@ function Tasks() {
                 ))}
 
                 {adding && (
-                    <div className="w-full bg-[#1b1b1b] rounded-[9px] px-3 py-2 flex flex-col gap-1 shrink-0">
+                    <div className="w-full bg-item rounded-[9px] px-3 py-2 flex flex-col gap-1 shrink-0">
                         <input
                             autoFocus
                             value={name}
                             onChange={e => setName(e.target.value)}
                             onKeyDown={onKey}
                             placeholder="Task name..."
-                            className="w-full bg-transparent text-[#f6f6f6] text-base outline-none placeholder:opacity-30"
+                            className="w-full bg-transparent text-fg text-base outline-none placeholder:opacity-30"
                         />
                         <input
                             type="datetime-local"
                             value={deadline}
                             onChange={e => setDeadline(e.target.value)}
                             onKeyDown={onKey}
-                            className="w-full bg-transparent text-[#efefef] text-xs opacity-70 outline-none scheme-dark"
+                            className="w-full bg-transparent text-fg text-xs opacity-70 outline-none"
                         />
                     </div>
                 )}
@@ -193,14 +193,14 @@ function Tasks() {
             <div className="flex justify-end gap-2 mt-4 shrink-0">
                 <button
                     onClick={() => (adding ? add() : setAdding(true))}
-                    className="w-9.5 h-6.5 bg-[#1b1b1b] rounded-[9px] flex items-center justify-center text-[#f6f6f6] opacity-60 hover:opacity-100 transition-opacity text-lg cursor-pointer"
+                    className="w-9.5 h-6.5 bg-item rounded-[9px] flex items-center justify-center text-fg opacity-60 hover:opacity-100 transition-opacity text-lg cursor-pointer"
                     aria-label="Add task"
                 >
                     +
                 </button>
                 <button
                     onClick={deleteCompleted}
-                    className="w-9.5 h-6.5 bg-[#1b1b1b] rounded-[9px] flex items-center justify-center text-[#f6f6f6] opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
+                    className="w-9.5 h-6.5 bg-item rounded-[9px] flex items-center justify-center text-fg opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
                     aria-label="Delete completed tasks"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
