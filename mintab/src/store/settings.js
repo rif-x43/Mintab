@@ -16,6 +16,11 @@ export const DEFAULTS = {
   themeMode: 'dark',
   useCustomBackground: false,
   backgroundImage: '',
+  showSidebar: true,
+  sidebarPosition: 'right',
+  showCalendar: true,
+  showTasks: true,
+  keepSidebarExpanded: false,
 }
 
 export const CITIES = {

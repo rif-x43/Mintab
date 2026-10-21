@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSettings } from '../store/settings'
 
 function Calendar() {
     const [current, setCurrent] = useState(new Date())
@@ -213,19 +214,25 @@ function Tasks() {
 }
 
 export default function Sidebar({ isOpen }) {
-    return (
-        <aside
-            style={{ '--card-w': 'clamp(300px, 20vw, 400px)' }}
-            className={`
-        absolute top-0 right-0 h-full pr-[7%]
+  const { sidebarPosition, showCalendar, showTasks } = useSettings((s) => s.settings)
+  const isRight = sidebarPosition === 'right'
+
+  if (!showCalendar && !showTasks) return null
+
+  return (
+    <aside
+      style={{ '--card-w': 'clamp(400px, 20vw, 480px)' }}
+      className={`
+        absolute top-0 h-full
+        ${isRight ? 'right-0 pr-[7%]' : 'left-0 pl-[7%]'}
         flex flex-col justify-center gap-28
         pointer-events-none
         transition-transform duration-300 ease-in-out
-        ${isOpen ? 'translate-x-0' : 'translate-x-full'}
+        ${isOpen ? 'translate-x-0' : isRight ? 'translate-x-full' : '-translate-x-full'}
       `}
-        >
-            <Calendar />
-            <Tasks />
-        </aside>
-    )
+    >
+      {showCalendar && <Calendar />}
+      {showTasks && <Tasks />}
+    </aside>
+  )
 }

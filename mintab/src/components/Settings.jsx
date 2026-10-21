@@ -235,6 +235,44 @@ function AppearanceTab({ draft, set }) {
   )
 }
 
+/* ---------- Sidebar tab ---------- */
+
+function SidebarTab({ draft, set }) {
+  const off = !draft.showSidebar
+  return (
+    <div className="flex flex-col gap-10">
+      <div>
+        <Row label="Show Sidebar">
+          <Checkbox checked={draft.showSidebar} onChange={(v) => set('showSidebar', v)} />
+        </Row>
+        <Row label="Sidebar Position" sub dim={off}>
+          <Segmented
+            value={draft.sidebarPosition}
+            onChange={(v) => set('sidebarPosition', v)}
+            options={[{ value: 'left', label: 'Left' }, { value: 'right', label: 'Right' }]}
+          />
+        </Row>
+      </div>
+
+      <div>
+        <Row label="Widgets" dim={off} />
+        <Row label="Calendar" sub dim={off}>
+          <Checkbox checked={draft.showCalendar} onChange={(v) => set('showCalendar', v)} />
+        </Row>
+        <Row label="Tasks" sub dim={off}>
+          <Checkbox checked={draft.showTasks} onChange={(v) => set('showTasks', v)} />
+        </Row>
+      </div>
+
+      <Row label="Keep Sidebar Expanded" dim={off}>
+        <Checkbox checked={draft.keepSidebarExpanded} onChange={(v) => set('keepSidebarExpanded', v)} />
+      </Row>
+    </div>
+  )
+}
+
+
+
 /* ---------- Main panel ---------- */
 
 export default function Settings({ onClose }) {
@@ -282,7 +320,8 @@ export default function Settings({ onClose }) {
         <section className="mx-[57px] mt-[30px] flex-1 min-h-0 bg-item rounded-2xl p-[45px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {tab === 'General' && <GeneralTab draft={draft} set={set} />}
           {tab === 'Appearance' && <AppearanceTab draft={draft} set={set} />}
-          {tab !== 'General' && tab !== 'Appearance' && (
+          {tab === 'Sidebar' && <SidebarTab draft={draft} set={set} />}
+          {(tab === 'Backup' || tab === 'About') && (
             <p className="opacity-40 text-lg">{tab} tab coming next...</p>
           )}
         </section>
