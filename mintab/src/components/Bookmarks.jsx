@@ -54,7 +54,7 @@ export function folderOptions(nodes, depth = 0) {
 
 function BookmarkNode({ node, expand }) {
   const [open, setOpen] = useState(!!expand)
-  const row = 'flex items-center gap-2 py-0.5 text-left text-[#f6f6f6]/50 hover:text-[#f6f6f6] transition-colors'
+  const row = 'flex items-center gap-2 py-0.5 text-left text-fg/50 hover:text-fg transition-colors'
 
   if (node.url) {
     return (
@@ -93,7 +93,7 @@ export default function Bookmarks() {
 
   return (
     <div className="fixed top-6 left-6 z-10 max-w-[280px] text-lg">
-      <div className="flex items-center gap-2 text-[#f6f6f6] text-xl">
+      <div className="flex items-center gap-2 text-fg text-xl">
         <Bookmark size={18} />
         <span>{title}</span>
       </div>

@@ -25,13 +25,13 @@ export default function Clock() {
       aria-label="Current time and date"
     >
       {showClock && (
-        <time className="text-[#f6f6f6] text-8xl font-normal tracking-wide">
+        <time className="text-fg text-8xl font-normal tracking-wide">
           {hours}:{minutes}
           {is12 && <span className="text-xl ml-2 tracking-widest">{period}</span>}
         </time>
       )}
       {showDate && (
-        <time className="text-[#f6f6f6] text-base font-normal tracking-[1.98px]">
+        <time className="text-fg text-base font-normal tracking-[1.98px]">
           {formatDate(time, dateFormat)}
         </time>
       )}
