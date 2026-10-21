@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSettings, DEFAULTS, CITIES } from '../store/settings'
 import { formatDate, DATE_FORMATS } from '../utils/formatDate'
+import { useBookmarks, folderOptions } from './Bookmarks'
 
 const TABS = ['General', 'Appearance', 'Sidebar', 'Backup', 'About']
 
@@ -77,6 +78,7 @@ function Row({ label, sub, dim, children }) {
 /* ---------- General tab ---------- */
 
 function GeneralTab({ draft, set }) {
+  const roots = useBookmarks()
   const now = new Date()
   const locationOptions = [
     { value: 'auto', label: 'Use device location' },
@@ -128,8 +130,16 @@ function GeneralTab({ draft, set }) {
         <Row label="Show Bookmarks">
           <Checkbox checked={draft.showBookmarks} onChange={(v) => set('showBookmarks', v)} />
         </Row>
-        <Row label="Select Folder" sub dim />
-        <Row label="Expand Bookmarks by Default" sub dim />
+        <Row label="Select Folder" sub dim={!draft.showBookmarks}>
+          <SelectBox
+            value={draft.bookmarkFolder}
+            onChange={(v) => set('bookmarkFolder', v)}
+            options={[{ value: 'all', label: 'All Bookmarks' }, ...folderOptions(roots)]}
+          />
+        </Row>
+        <Row label="Expand Bookmarks by Default" sub dim={!draft.showBookmarks}>
+          <Checkbox checked={draft.expandBookmarks} onChange={(v) => set('expandBookmarks', v)} />
+        </Row>
       </div>
     </div>
   )
