@@ -32,23 +32,23 @@ function App() {
           <div className="absolute inset-0 bg-bg/40" />
         </>
       )}
-      <Clock />
+      <Clock shifted={settingsOpen} />
       <Weather />
-      <SettingsButton onClick={() => { setSidebarOpen(false); setSettingsOpen(true) }} />
+      <SettingsButton onClick={() => { setSidebarOpen(false); setSettingsOpen((p) => !p) }} />
       {showSidebar && (
         <>
-          <SidebarToggle isOpen={sidebarOpen} onClick={() => setSidebarOpen((p) => !p)} position={sidebarPosition} />
+          <SidebarToggle isOpen={sidebarOpen} onClick={() => { setSettingsOpen(false); setSidebarOpen((p) => !p) }} position={sidebarPosition} />
           <Sidebar isOpen={sidebarOpen} />
         </>
       )}
-      {settingsOpen && (
-        <Settings
-          onClose={() => {
-            setSettingsOpen(false)
-            if (keepSidebarExpanded) setSidebarOpen(true)
-          }}
-        />
-      )}
+      
+      <Settings
+        open={settingsOpen}
+        onClose={() => {
+          setSettingsOpen(false)
+          if (keepSidebarExpanded) setSidebarOpen(true)
+        }}
+      />
     </main>
   )
 }
