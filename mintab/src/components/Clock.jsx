@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSettings } from '../store/settings'
 import { formatDate } from '../utils/formatDate'
 
-export default function Clock() {
+export default function Clock({ shifted = false }) {
   const { showClock, showDate, clockFormat, dateFormat } = useSettings((s) => s.settings)
   const [time, setTime] = useState(new Date())
 
@@ -21,7 +21,8 @@ export default function Clock() {
 
   return (
     <section
-      className="absolute top-[42%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2"
+      style={{ left: shifted ? 'calc((95vw - min(845px, 90vw)) / 2)' : '50%' }}
+      className="absolute top-[42%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2 transition-[left] duration-500 ease-in-out"
       aria-label="Current time and date"
     >
       {showClock && (
