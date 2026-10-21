@@ -102,11 +102,7 @@ const formatDue = (iso) => {
 }
 
 function Tasks() {
-    const [tasks, setTasks] = useState([
-        { id: 1, text: 'Ungabunga Session', due: at(0, 21, 0), done: true },
-        { id: 2, text: 'Data Structure Assignment', due: at(0, 23, 59), done: false },
-        { id: 3, text: 'Algorithm Lab Quiz', due: at(1, 14, 40), done: false },
-    ])
+    const [tasks, setTasks] = useState([])
     const [name, setName] = useState('')
     const [deadline, setDeadline] = useState('')
     const [adding, setAdding] = useState(false)
