@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSettings } from '../store/settings'
 
-function Calendar() {
-    const [current, setCurrent] = useState(new Date())
+function Calendar({ picker = false, selected = null, onSelect }) {
+    const [current, setCurrent] = useState(selected ?? new Date())
     const today = new Date()
 
     const year = current.getFullYear()
@@ -15,26 +15,30 @@ function Calendar() {
 
     const cells = []
     for (let i = firstDay - 1; i >= 0; i--) {
-        cells.push({ day: daysInPrev - i, current: false })
+        cells.push({ day: daysInPrev - i, current: false, offset: -1 })
     }
     for (let i = 1; i <= daysInMonth; i++) {
-        cells.push({ day: i, current: true })
+        cells.push({ day: i, current: true, offset: 0 })
     }
     while (cells.length % 7 !== 0) {
-        cells.push({ day: cells.length - daysInMonth - firstDay + 1, current: false })
+        cells.push({ day: cells.length - daysInMonth - firstDay + 1, current: false, offset: 1 })
     }
 
-    const isToday = (day, isCurrent) =>
-        isCurrent &&
-        day === today.getDate() &&
-        month === today.getMonth() &&
-        year === today.getFullYear()
+    const sameDay = (a, b) =>
+        a && b &&
+        a.getFullYear() === b.getFullYear() &&
+        a.getMonth() === b.getMonth() &&
+        a.getDate() === b.getDate()
 
     return (
-        <div className="bg-card rounded-2xl p-5 w-(--card-w) min-h-[calc(var(--card-w)*0.75)] pointer-events-auto flex flex-col justify-between">
+        <div className={picker
+            ? 'flex flex-col'
+            : 'bg-card rounded-2xl p-5 w-(--card-w) min-h-[calc(var(--card-w)*0.75)] pointer-events-auto flex flex-col justify-between'}
+        >
             {/* Month nav */}
             <div className="flex items-center justify-between mb-4">
                 <button
+                    type="button"
                     onClick={() => setCurrent(new Date(year, month - 1))}
                     className="text-fg opacity-50 hover:opacity-100 transition-opacity"
                 >
@@ -44,6 +48,7 @@ function Calendar() {
                 </button>
                 <span className="text-fg text-base font-normal tracking-wide">{monthName}</span>
                 <button
+                    type="button"
                     onClick={() => setCurrent(new Date(year, month + 1))}
                     className="text-fg opacity-30 hover:opacity-100 transition-opacity"
                 >
@@ -62,24 +67,106 @@ function Calendar() {
 
             {/* Date grid */}
             <div className="grid grid-cols-7 gap-y-1">
-                {cells.map((cell, i) => (
-                    <div key={i} className="flex items-center justify-center h-7">
-                        <span
-                            className={`w-7 h-7 flex items-center justify-center text-sm rounded-full
-                ${isToday(cell.day, cell.current)
-                                    ? 'bg-fg text-bg font-medium'
-                                    : cell.current
-                                        ? 'text-fg'
-                                        : 'text-fg opacity-20'}`}
-                        >
-                            {cell.day}
-                        </span>
-                    </div>
-                ))}
+                {cells.map((cell, i) => {
+                    const date = new Date(year, month + cell.offset, cell.day)
+                    const isToday = cell.current && sameDay(date, today)
+                    const isSel = picker && sameDay(date, selected)
+                    const filled = picker ? isSel : isToday
+                    const ring = picker && isToday && !isSel ? ' ring-1 ring-fg/50' : ''
+                    const cls = `w-7 h-7 flex items-center justify-center text-sm rounded-full${ring}
+                        ${filled ? 'bg-fg text-bg font-medium' : cell.current ? 'text-fg' : 'text-fg opacity-20'}`
+
+                    return (
+                        <div key={i} className="flex items-center justify-center h-7">
+                            {picker ? (
+                                <button
+                                    type="button"
+                                    onClick={() => onSelect?.(date)}
+                                    className={`${cls} cursor-pointer ${filled ? '' : 'hover:bg-item'}`}
+                                >
+                                    {cell.day}
+                                </button>
+                            ) : (
+                                <span className={cls}>{cell.day}</span>
+                            )}
+                        </div>
+                    )
+                })}
             </div>
         </div>
     )
 }
+
+/* ---------- Time picker: scrollable columns ---------- */
+
+const pad = (n) => String(n).padStart(2, '0')
+
+function TimeColumn({ items, value, onPick }) {
+    const ref = useRef(null)
+
+    // scroll the selected value to the middle when the picker opens
+    useEffect(() => {
+        const box = ref.current
+        const el = box?.querySelector('[data-sel="true"]')
+        if (box && el) box.scrollTop = el.offsetTop - box.clientHeight / 2 + el.clientHeight / 2
+    }, [])
+
+    return (
+        <div
+            ref={ref}
+            className="relative flex-1 h-40 overflow-y-auto bg-item rounded-[9px] p-1 flex flex-col gap-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+            {items.map((it) => {
+                const sel = it.value === value
+                return (
+                    <button
+                        key={it.value}
+                        type="button"
+                        data-sel={sel}
+                        onClick={() => onPick(it.value)}
+                        className={`h-8 shrink-0 rounded-[7px] text-base cursor-pointer transition-colors
+                            ${sel ? 'bg-fg text-bg' : 'text-fg opacity-60 hover:opacity-100'}`}
+                    >
+                        {it.label}
+                    </button>
+                )
+            })}
+        </div>
+    )
+}
+
+function TimePicker({ value, onChange }) {
+    const { clockFormat } = useSettings((s) => s.settings)
+    const is12 = clockFormat === '12h'
+    const h24 = value.getHours()
+    const m = value.getMinutes()
+    const pm = h24 >= 12
+    const h12 = h24 % 12 || 12
+
+    const hours = is12
+        ? Array.from({ length: 12 }, (_, i) => ({ value: i + 1, label: pad(i + 1) }))
+        : Array.from({ length: 24 }, (_, i) => ({ value: i, label: pad(i) }))
+    const minutes = Array.from({ length: 60 }, (_, i) => ({ value: i, label: pad(i) }))
+
+    const pickHour = (h) => onChange(is12 ? (h % 12) + (pm ? 12 : 0) : h, m)
+    const pickAmPm = (isPm) => onChange((h12 % 12) + (isPm ? 12 : 0), m)
+
+    return (
+        <div className="flex gap-2 mt-4">
+            <TimeColumn items={hours} value={is12 ? h12 : h24} onPick={pickHour} />
+            <TimeColumn items={minutes} value={m} onPick={(min) => onChange(h24, min)} />
+            {is12 && (
+                <TimeColumn
+                    items={[{ value: false, label: 'AM' }, { value: true, label: 'PM' }]}
+                    value={pm}
+                    onPick={pickAmPm}
+                />
+            )}
+        </div>
+    )
+}
+
+/* ---------- Tasks ---------- */
 
 const at = (dayOffset, h, m) => {
     const d = new Date()
@@ -88,10 +175,10 @@ const at = (dayOffset, h, m) => {
     return d.toISOString()
 }
 
-const formatDue = (iso) => {
+const formatDue = (iso, hour12 = true) => {
     if (!iso) return ''
     const d = new Date(iso)
-    const time = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+    const time = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12 })
     const startOf = (x) => new Date(x.getFullYear(), x.getMonth(), x.getDate())
     const diff = Math.round((startOf(d) - startOf(new Date())) / 86400000)
     const label =
@@ -103,15 +190,33 @@ const formatDue = (iso) => {
 }
 
 function Tasks() {
+    const { sidebarPosition, clockFormat } = useSettings((s) => s.settings)
+    const hour12 = clockFormat === '12h'
+
     const [tasks, setTasks] = useState([])
     const [name, setName] = useState('')
-    const [deadline, setDeadline] = useState('')
+    const [deadline, setDeadline] = useState(null) // Date | null
     const [adding, setAdding] = useState(false)
+    const [pickerOpen, setPickerOpen] = useState(false)
+    const popRef = useRef(null)
+    const btnRef = useRef(null)
+
+    // close the picker when clicking outside it
+    useEffect(() => {
+        if (!pickerOpen) return
+        const close = (e) => {
+            if (!popRef.current?.contains(e.target) && !btnRef.current?.contains(e.target)) {
+                setPickerOpen(false)
+            }
+        }
+        document.addEventListener('mousedown', close)
+        return () => document.removeEventListener('mousedown', close)
+    }, [pickerOpen])
 
     const toggle = (id) =>
         setTasks(prev => prev.map(t => (t.id === id ? { ...t, done: !t.done } : t)))
 
-    const cancel = () => { setAdding(false); setName(''); setDeadline('') }
+    const cancel = () => { setAdding(false); setPickerOpen(false); setName(''); setDeadline(null) }
 
     const add = () => {
         if (!name.trim()) { cancel(); return }
@@ -120,12 +225,19 @@ function Tasks() {
             {
                 id: Date.now(),
                 text: name.trim(),
-                due: deadline ? new Date(deadline).toISOString() : '',
+                due: deadline ? deadline.toISOString() : '',
                 done: false,
             },
         ])
         cancel()
     }
+
+    // date and time are picked independently; the other half falls back to "now"
+    const base = deadline ?? new Date()
+    const pickDate = (d) =>
+        setDeadline(new Date(d.getFullYear(), d.getMonth(), d.getDate(), base.getHours(), base.getMinutes()))
+    const pickTime = (h, m) =>
+        setDeadline(new Date(base.getFullYear(), base.getMonth(), base.getDate(), h, m))
 
     // Deletes only the checked (faded) tasks
     const deleteCompleted = () => setTasks(prev => prev.filter(t => !t.done))
@@ -136,39 +248,45 @@ function Tasks() {
     }
 
     return (
-        <div className="bg-card rounded-2xl p-5 w-(--card-w) pointer-events-auto flex flex-col">
+        <div className="relative bg-card rounded-2xl p-5 w-(--card-w) pointer-events-auto flex flex-col">
             <p className="text-fg text-base font-normal text-center mb-4 tracking-widest shrink-0">Tasks</p>
 
             {/* Fixed-height card: list scrolls inside it */}
             <div className="flex flex-col gap-2 h-[178px] shrink-0 overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden">
-                {tasks.map(task => (
-                    <div
-                        key={task.id}
-                        className={`w-full bg-item rounded-[9px] px-3 py-2 flex items-start justify-between gap-2 shrink-0 ${task.done ? 'opacity-40' : ''}`}
-                    >
-                        <div className="flex flex-col">
-                            <span className={`text-fg text-base leading-snug ${task.done ? 'line-through' : ''}`}>
-                                {task.text}
-                            </span>
-                            {task.due && (
-                                <span className={`text-fg text-xs opacity-70 ${task.done ? 'line-through' : ''}`}>
-                                    {formatDue(task.due)}
-                                </span>
-                            )}
-                        </div>
-                        <button
-                            onClick={() => toggle(task.id)}
-                            className={`w-5 h-5 shrink-0 mt-0.5 rounded-[5px] border flex items-center justify-center transition-colors cursor-pointer
-                ${task.done ? 'bg-fg border-fg' : 'bg-item border-fg'}`}
-                        >
-                            {task.done && (
-                                <svg className="w-3 h-3 text-bg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                </svg>
-                            )}
-                        </button>
+                {tasks.length === 0 && !adding && (
+                    <div className="flex-1 flex items-center justify-center text-fg text-base opacity-40">
+                        No tasks yet
                     </div>
-                ))}
+                )}
+
+                {tasks.map(task => (
+    <div
+        key={task.id}
+        className={`w-full bg-item rounded-[9px] px-3 py-2 flex items-start gap-2 shrink-0 ${task.done ? 'opacity-40' : ''}`}
+    >
+        <div className="flex flex-col flex-1 min-w-0">
+            <span className={`text-fg text-base leading-snug break-words ${task.done ? 'line-through' : ''}`}>
+                {task.text}
+            </span>
+            {task.due && (
+                <span className={`text-fg text-xs opacity-70 ${task.done ? 'line-through' : ''}`}>
+                    {formatDue(task.due, hour12)}
+                </span>
+            )}
+        </div>
+        <button
+            onClick={() => toggle(task.id)}
+            className={`ml-auto w-5 h-5 shrink-0 mt-0.5 rounded-[5px] border flex items-center justify-center transition-colors cursor-pointer
+                ${task.done ? 'bg-fg border-fg' : 'bg-item border-fg'}`}
+        >
+            {task.done && (
+                <svg className="w-3 h-3 text-bg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+            )}
+        </button>
+    </div>
+))}
 
                 {adding && (
                     <div className="w-full bg-item rounded-[9px] px-3 py-2 flex flex-col gap-1 shrink-0">
@@ -180,13 +298,14 @@ function Tasks() {
                             placeholder="Task name..."
                             className="w-full bg-transparent text-fg text-base outline-none placeholder:opacity-30"
                         />
-                        <input
-                            type="datetime-local"
-                            value={deadline}
-                            onChange={e => setDeadline(e.target.value)}
-                            onKeyDown={onKey}
-                            className="w-full bg-transparent text-fg text-xs opacity-70 outline-none"
-                        />
+                        <button
+                            ref={btnRef}
+                            type="button"
+                            onClick={() => setPickerOpen((o) => !o)}
+                            className="w-fit bg-transparent text-fg text-xs opacity-70 hover:opacity-100 cursor-pointer"
+                        >
+                            {deadline ? formatDue(deadline.toISOString(), hour12) : 'Set deadline'}
+                        </button>
                     </div>
                 )}
             </div>
@@ -209,6 +328,34 @@ function Tasks() {
                     </svg>
                 </button>
             </div>
+
+            {/* Deadline picker: opens beside the card, outside the scrolling list */}
+            {adding && pickerOpen && (
+                <div
+                    ref={popRef}
+                    className={`absolute bottom-0 z-20 w-72 bg-card rounded-2xl p-5 shadow-xl
+                        ${sidebarPosition === 'right' ? 'right-full mr-4' : 'left-full ml-4'}`}
+                >
+                    <Calendar picker selected={deadline} onSelect={pickDate} />
+                    <TimePicker value={base} onChange={pickTime} />
+                    <div className="flex justify-end gap-2 mt-4">
+                        <button
+                            type="button"
+                            onClick={() => { setDeadline(null); setPickerOpen(false) }}
+                            className="h-6.5 px-3 bg-item rounded-[9px] text-fg text-sm opacity-60 hover:opacity-100 cursor-pointer"
+                        >
+                            Clear
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setPickerOpen(false)}
+                            className="h-6.5 px-3 bg-item rounded-[9px] text-fg text-sm cursor-pointer"
+                        >
+                            Done
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
