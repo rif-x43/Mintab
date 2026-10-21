@@ -21,17 +21,17 @@ export default function Clock() {
 
   return (
     <section
-      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2"
+      className="absolute top-[42%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2"
       aria-label="Current time and date"
     >
       {showClock && (
-        <time className="text-[#f6f6f6] text-9xl font-normal tracking-wide">
+        <time className="text-[#f6f6f6] text-8xl font-normal tracking-wide">
           {hours}:{minutes}
-          {is12 && <span className="text-2xl ml-2 tracking-widest">{period}</span>}
+          {is12 && <span className="text-xl ml-2 tracking-widest">{period}</span>}
         </time>
       )}
       {showDate && (
-        <time className="text-[#f6f6f6] text-lg font-normal tracking-[1.98px]">
+        <time className="text-[#f6f6f6] text-base font-normal tracking-[1.98px]">
           {formatDate(time, dateFormat)}
         </time>
       )}
