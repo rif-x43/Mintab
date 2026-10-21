@@ -271,7 +271,73 @@ function SidebarTab({ draft, set }) {
   )
 }
 
+/* ---------- Backup tab ---------- */
 
+function BackupTab({ saved, onImport }) {
+  const fileRef = useRef(null)
+  const [msg, setMsg] = useState(null)
+
+  const download = () => {
+    const data = { app: 'mintab', version: 1, settings: saved }
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'mintab-settings.json'
+    a.click()
+    URL.revokeObjectURL(url)
+    setMsg({ ok: true, text: 'Settings downloaded.' })
+  }
+
+  const upload = async (e) => {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    try {
+      const json = JSON.parse(await file.text())
+      const incoming = json.settings ?? json
+      const clean = {}
+      // Keep only known keys with the right type
+      for (const key of Object.keys(DEFAULTS)) {
+        if (typeof incoming[key] === typeof DEFAULTS[key]) clean[key] = incoming[key]
+      }
+      if (Object.keys(clean).length === 0) throw new Error('empty')
+      onImport(clean)
+      setMsg({ ok: true, text: 'Settings restored and applied.' })
+    } catch {
+      setMsg({ ok: false, text: 'Invalid settings file.' })
+    }
+  }
+
+  const btn = 'w-[100px] h-10 bg-card rounded-[5px] flex items-center justify-center cursor-pointer hover:opacity-80'
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between text-lg">
+        <span>Upload User Settings</span>
+        <button type="button" onClick={() => fileRef.current?.click()} className={btn} aria-label="Upload settings file">
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16" />
+          </svg>
+        </button>
+        <input ref={fileRef} type="file" accept="application/json,.json" onChange={upload} className="hidden" />
+      </div>
+
+      <div className="flex items-center justify-between text-lg">
+        <span>Download User Settings</span>
+        <button type="button" onClick={download} className={btn} aria-label="Download settings file">
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16" />
+          </svg>
+        </button>
+      </div>
+
+      {msg && (
+        <p className={`text-base ${msg.ok ? 'opacity-60' : 'text-red-400'}`}>{msg.text}</p>
+      )}
+    </div>
+  )
+}
 
 /* ---------- Main panel ---------- */
 
@@ -321,8 +387,18 @@ export default function Settings({ onClose }) {
           {tab === 'General' && <GeneralTab draft={draft} set={set} />}
           {tab === 'Appearance' && <AppearanceTab draft={draft} set={set} />}
           {tab === 'Sidebar' && <SidebarTab draft={draft} set={set} />}
-          {(tab === 'Backup' || tab === 'About') && (
-            <p className="opacity-40 text-lg">{tab} tab coming next...</p>
+          {tab === 'Backup' && (
+            <BackupTab
+              saved={saved}
+              onImport={(imported) => {
+                const next = { ...DEFAULTS, ...imported }
+                saveSettings(next)
+                setDraft(next)
+              }}
+            />
+          )}
+          {tab === 'About' && (
+            <p className="opacity-40 text-lg">About tab coming next...</p>
           )}
         </section>
 
