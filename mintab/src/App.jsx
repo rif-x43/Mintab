@@ -5,6 +5,7 @@ import SettingsButton from './components/SettingsButton'
 import SidebarToggle from './components/SidebarToggle'
 import Sidebar from './components/Sidebar'
 import Settings from './components/Settings'
+import Bookmarks from './components/Bookmarks'
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -12,6 +13,7 @@ function App() {
   return (
     <main className="w-screen h-screen bg-[#121212] relative overflow-hidden">
       <Clock />
+      <Bookmarks />
       <Weather />
       <SettingsButton onClick={() => { setSidebarOpen(false); setSettingsOpen(true) }} />
       <SidebarToggle

@@ -11,6 +11,7 @@ export const DEFAULTS = {
   location: 'auto',
   showBookmarks: false,
   expandBookmarks: false,
+  bookmarkFolder: 'all',
 }
 
 export const CITIES = {
