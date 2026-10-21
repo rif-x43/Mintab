@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { useSettings, DEFAULTS, CITIES } from '../store/settings'
 import { formatDate, DATE_FORMATS } from '../utils/formatDate'
 import { useBookmarks, folderOptions } from './Bookmarks'
+import iconWhite from '../assets/appicon_white.svg'
+import iconBlack from '../assets/appicon_black.svg'
 
 const TABS = ['General', 'Appearance', 'Sidebar', 'Backup', 'About']
 
@@ -339,6 +341,83 @@ function BackupTab({ saved, onImport }) {
   )
 }
 
+/* ---------- About tab ---------- */
+
+const VERSION = '1.0.0'
+
+// Leave a url empty and its icon shows dimmed and unclickable
+const LINKS = [
+  {
+    label: 'GitHub',
+    url: 'https://github.com/rif-x43/Mintab',
+    icon: <path strokeLinecap="round" strokeLinejoin="round" d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" />,
+  },
+  {
+    label: 'Chrome Web Store',
+    url: '',
+    icon: (
+      <>
+        <circle cx="12" cy="12" r="10" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 9.5A5 5 0 1017 12h-5" />
+      </>
+    ),
+  },
+  {
+    label: 'Google Drive',
+    url: 'https://drive.google.com/drive/folders/1-Z7XUCSqu7UbEFpvcFSlp0QiO1KlpGT3',
+    icon: <path strokeLinecap="round" strokeLinejoin="round" d="M8 3h8l6 10-4 8H6l-4-8L8 3zm0 0l8 14m0-14L8 17m-6-4h20" />,
+  },
+  {
+    label: 'Website',
+    url: '',
+    icon: (
+      <>
+        <circle cx="12" cy="12" r="10" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+      </>
+    ),
+  },
+]
+
+function AboutTab() {
+  return (
+    <div className="flex flex-col gap-14">
+      <div className="flex flex-col gap-5">
+        <p className="text-lg">About Us?</p>
+        <div className="flex items-end gap-2">
+          <img src={iconWhite} alt="" className="w-16 h-16 block light:hidden" />
+          <img src={iconBlack} alt="" className="w-16 h-16 hidden light:block" />
+          <span className="font-hero text-6xl leading-none tracking-wide ml-3">Mintab</span>
+          <span className="font-hero font-light text-base opacity-80 mb-1">v{VERSION}</span>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <p className="text-lg">
+          Where to get <span className="font-medium">Mintab</span>?
+        </p>
+        <div className="flex gap-5">
+          {LINKS.map((l) => (
+            <a
+              key={l.label}
+              href={l.url || undefined}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={l.label}
+              title={l.label}
+              className={l.url ? 'hover:opacity-70 transition-opacity' : 'opacity-30 pointer-events-none'}
+            >
+              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.3}>
+                {l.icon}
+              </svg>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /* ---------- Main panel ---------- */
 
 export default function Settings({ onClose }) {
@@ -397,9 +476,7 @@ export default function Settings({ onClose }) {
               }}
             />
           )}
-          {tab === 'About' && (
-            <p className="opacity-40 text-lg">About tab coming next...</p>
-          )}
+          {tab === 'About' && <AboutTab />}
         </section>
 
         {/* Footer */}

@@ -1,6 +1,29 @@
 @import "tailwindcss";
+@custom-variant light (&:where([data-theme='light'], [data-theme='light'] *));
+
+@font-face {
+  font-family: 'Hero';
+  src: url('./assets/fonts/HeroLight-Light.otf') format('opentype');
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Hero';
+  src: url('./assets/fonts/HeroLight-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Hero';
+  src: url('./assets/fonts/HeroLight-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-display: swap;
+}
 
 @theme {
+  --font-hero: 'Hero', 'Rajdhani', sans-serif;
   --color-bg: #121212;
   --color-card: #141414;
   --color-item: #1b1b1b;
