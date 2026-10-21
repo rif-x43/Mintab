@@ -9,6 +9,7 @@ import { useSettings } from './store/settings'
 import { useTheme } from './hooks/useTheme'
 import iconWhite from './assets/icon_white.svg'
 import iconBlack from './assets/icon_black.svg'
+import Bookmarks from './components/Bookmarks'
 
 function App() {
   useTheme()
@@ -49,6 +50,7 @@ function App() {
       />
       <Clock shifted={settingsOpen} />
       <Weather />
+      <Bookmarks />
       <SettingsButton onClick={() => { setSidebarOpen(false); setSettingsOpen((p) => !p) }} />
       {showSidebar && (
         <>
