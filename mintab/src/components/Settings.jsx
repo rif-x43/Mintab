@@ -420,7 +420,7 @@ function AboutTab() {
 
 /* ---------- Main panel ---------- */
 
-export default function Settings({ onClose }) {
+export default function Settings({ open, onClose }) {
   const saved = useSettings((s) => s.settings)
   const saveSettings = useSettings((s) => s.saveSettings)
 
@@ -430,15 +430,26 @@ export default function Settings({ onClose }) {
   const set = (key, value) => setDraft((d) => ({ ...d, [key]: value }))
   const dirty = JSON.stringify(draft) !== JSON.stringify(saved)
 
+  // Reset unsaved changes each time the panel opens
   useEffect(() => {
+    if (open) setDraft(saved)
+  }, [open, saved])
+
+  useEffect(() => {
+    if (!open) return
     const onKey = (e) => e.key === 'Escape' && onClose()
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
+  }, [open, onClose])
 
   return (
-      <div className="pointer-events-none fixed inset-0 z-[60] flex items-center justify-end pr-[5%]">
-      <div className="pointer-events-auto w-[845px] h-[890px] max-w-[90vw] max-h-[95vh] bg-card rounded-2xl flex flex-col pt-[33px] pb-8 text-fg">
+      <div className="pointer-events-none fixed inset-0 z-[60] flex items-center justify-end overflow-hidden pr-[5%]">
+      <div
+        aria-hidden={!open}
+        className={`w-[845px] h-[890px] max-w-[90vw] max-h-[95vh] bg-card rounded-2xl flex flex-col pt-[33px] pb-8 text-fg
+          transition-[translate,visibility] duration-500 ease-in-out
+          ${open ? 'pointer-events-auto visible translate-x-0' : 'invisible translate-x-[calc(100%+6vw)]'}`}
+      >
         <h1 className="text-2xl text-center text-fg h-[30px] leading-[30px]">Settings</h1>
 
         {/* Tabs */}

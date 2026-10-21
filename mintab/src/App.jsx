@@ -32,7 +32,7 @@ function App() {
           <div className="absolute inset-0 bg-bg/40" />
         </>
       )}
-      <Clock />
+      <Clock shifted={settingsOpen} />
       <Weather />
       <SettingsButton onClick={() => { setSidebarOpen(false); setSettingsOpen((p) => !p) }} />
       {showSidebar && (
@@ -41,14 +41,14 @@ function App() {
           <Sidebar isOpen={sidebarOpen} />
         </>
       )}
-      {settingsOpen && (
-        <Settings
-          onClose={() => {
-            setSettingsOpen(false)
-            if (keepSidebarExpanded) setSidebarOpen(true)
-          }}
-        />
-      )}
+      
+      <Settings
+        open={settingsOpen}
+        onClose={() => {
+          setSettingsOpen(false)
+          if (keepSidebarExpanded) setSidebarOpen(true)
+        }}
+      />
     </main>
   )
 }
