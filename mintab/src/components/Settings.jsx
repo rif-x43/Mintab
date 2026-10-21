@@ -437,14 +437,8 @@ export default function Settings({ onClose }) {
   }, [onClose])
 
   return (
-    <div
-      className="fixed inset-0 z-[60] bg-black/60 flex items-center justify-center"
-      onClick={onClose}
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="w-[845px] h-[890px] max-w-[95vw] max-h-[95vh] bg-card rounded-2xl flex flex-col pt-[33px] pb-8 text-fg"
-      >
+      <div className="pointer-events-none fixed inset-0 z-[60] flex items-center justify-end pr-[5%]">
+      <div className="pointer-events-auto w-[845px] h-[890px] max-w-[90vw] max-h-[95vh] bg-card rounded-2xl flex flex-col pt-[33px] pb-8 text-fg">
         <h1 className="text-2xl text-center text-fg h-[30px] leading-[30px]">Settings</h1>
 
         {/* Tabs */}

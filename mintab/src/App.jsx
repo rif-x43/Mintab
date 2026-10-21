@@ -34,10 +34,10 @@ function App() {
       )}
       <Clock />
       <Weather />
-      <SettingsButton onClick={() => { setSidebarOpen(false); setSettingsOpen(true) }} />
+      <SettingsButton onClick={() => { setSidebarOpen(false); setSettingsOpen((p) => !p) }} />
       {showSidebar && (
         <>
-          <SidebarToggle isOpen={sidebarOpen} onClick={() => setSidebarOpen((p) => !p)} position={sidebarPosition} />
+          <SidebarToggle isOpen={sidebarOpen} onClick={() => { setSettingsOpen(false); setSidebarOpen((p) => !p) }} position={sidebarPosition} />
           <Sidebar isOpen={sidebarOpen} />
         </>
       )}
