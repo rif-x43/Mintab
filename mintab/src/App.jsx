@@ -7,6 +7,8 @@ import Sidebar from './components/Sidebar'
 import Settings from './components/Settings'
 import { useSettings } from './store/settings'
 import { useTheme } from './hooks/useTheme'
+import iconWhite from './assets/icon_white.svg'
+import iconBlack from './assets/icon_black.svg'
 
 function App() {
   useTheme()
@@ -32,6 +34,19 @@ function App() {
           <div className="absolute inset-0 bg-bg/40" />
         </>
       )}
+            {/* Watermark */}
+      <img
+        src={iconWhite}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-38 -bottom-36 w-96 select-none opacity-[0.01] light:hidden"
+      />
+      <img
+        src={iconBlack}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-38 -bottom-36 hidden w-96 select-none opacity-[0.04] light:block"
+      />
       <Clock shifted={settingsOpen} />
       <Weather />
       <SettingsButton onClick={() => { setSidebarOpen(false); setSettingsOpen((p) => !p) }} />
