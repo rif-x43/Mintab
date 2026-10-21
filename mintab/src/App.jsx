@@ -1,27 +1,54 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Clock from './components/Clock'
 import Weather from './components/Weather'
 import SettingsButton from './components/SettingsButton'
 import SidebarToggle from './components/SidebarToggle'
 import Sidebar from './components/Sidebar'
 import Settings from './components/Settings'
-import Bookmarks from './components/Bookmarks'
+import { useSettings } from './store/settings'
+import { useTheme } from './hooks/useTheme'
 
 function App() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  useTheme()
+  const {
+    useCustomBackground, backgroundImage,
+    showSidebar, sidebarPosition, keepSidebarExpanded,
+  } = useSettings((s) => s.settings)
+  const [sidebarOpen, setSidebarOpen] = useState(keepSidebarExpanded)
   const [settingsOpen, setSettingsOpen] = useState(false)
+
+  useEffect(() => {
+    if (keepSidebarExpanded) setSidebarOpen(true)
+  }, [keepSidebarExpanded])
+
   return (
-    <main className="w-screen h-screen bg-[#121212] relative overflow-hidden">
+    <main className="w-screen h-screen bg-bg relative overflow-hidden">
+      {useCustomBackground && backgroundImage && (
+        <>
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${backgroundImage})` }}
+          />
+          <div className="absolute inset-0 bg-bg/40" />
+        </>
+      )}
       <Clock />
-      <Bookmarks />
       <Weather />
       <SettingsButton onClick={() => { setSidebarOpen(false); setSettingsOpen(true) }} />
-      <SidebarToggle
-        isOpen={sidebarOpen}
-        onClick={() => setSidebarOpen(prev => !prev)}
-      />
-      <Sidebar isOpen={sidebarOpen} />
-      {settingsOpen && <Settings onClose={() => setSettingsOpen(false)} />}
+      {showSidebar && (
+        <>
+          <SidebarToggle isOpen={sidebarOpen} onClick={() => setSidebarOpen((p) => !p)} position={sidebarPosition} />
+          <Sidebar isOpen={sidebarOpen} />
+        </>
+      )}
+      {settingsOpen && (
+        <Settings
+          onClose={() => {
+            setSettingsOpen(false)
+            if (keepSidebarExpanded) setSidebarOpen(true)
+          }}
+        />
+      )}
     </main>
   )
 }
