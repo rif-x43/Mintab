@@ -180,6 +180,15 @@ const MoonIcon = (
   </svg>
 )
 
+// Image icon — more semantic than a bare arrow
+const ImageUploadIcon = (
+  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" strokeLinejoin="round" />
+    <circle cx="8.5" cy="8.5" r="1.5" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M21 15l-5-5L5 21" />
+  </svg>
+)
+
 function AppearanceTab({ draft, set }) {
   const fileRef = useRef(null)
 
@@ -194,6 +203,13 @@ function AppearanceTab({ draft, set }) {
       /* ignore invalid image */
     }
   }
+
+  const removeImage = () => {
+    set('backgroundImage', '')
+    set('useCustomBackground', false)
+  }
+
+  const hasImage = !!draft.backgroundImage
 
   return (
     <div className="flex flex-col gap-10">
@@ -212,26 +228,51 @@ function AppearanceTab({ draft, set }) {
 
       <div>
         <Row label="Use Custom Background">
-          <Checkbox checked={draft.useCustomBackground} onChange={(v) => set('useCustomBackground', v)} />
+          <Checkbox
+            checked={draft.useCustomBackground}
+            onChange={(v) => {
+              set('useCustomBackground', v)
+              // Unchecking clears the stored image so it doesn't silently persist
+              if (!v) set('backgroundImage', '')
+            }}
+          />
         </Row>
-        <div className={`flex items-center justify-between pl-8 mt-1 text-lg ${draft.useCustomBackground ? '' : 'opacity-60 pointer-events-none'}`}>
-          <span>Upload File</span>
-          <button
-            type="button"
-            onClick={() => fileRef.current?.click()}
-            className="w-[100px] h-10 bg-card rounded-[5px] flex items-center justify-center overflow-hidden cursor-pointer hover:opacity-80"
-            aria-label="Upload background image"
-          >
-            {draft.backgroundImage ? (
-              <img src={draft.backgroundImage} alt="" className="w-full h-full object-cover" />
-            ) : (
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16" />
-              </svg>
+
+        {/* Upload row — uses Row for consistent indent + dim behaviour */}
+        <Row label="Background Image" sub dim={!draft.useCustomBackground}>
+          <div className="flex items-center gap-2">
+            {/* Thumbnail + remove button — only when an image is set */}
+            {hasImage && (
+              <div className="relative w-[72px] h-10 rounded-[5px] overflow-hidden group">
+                <img src={draft.backgroundImage} alt="" className="w-full h-full object-cover" />
+                {/* Remove overlay */}
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                  aria-label="Remove background image"
+                >
+                  <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
             )}
-          </button>
-          <input ref={fileRef} type="file" accept="image/*" onChange={onFile} className="hidden" />
-        </div>
+
+            {/* Upload button */}
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              className="h-10 px-3 bg-card rounded-[5px] flex items-center gap-2 text-base cursor-pointer hover:opacity-80 transition-opacity"
+              aria-label="Upload background image"
+            >
+              {ImageUploadIcon}
+              <span>{hasImage ? 'Replace' : 'Upload'}</span>
+            </button>
+
+            <input ref={fileRef} type="file" accept="image/*" onChange={onFile} className="hidden" />
+          </div>
+        </Row>
       </div>
     </div>
   )
