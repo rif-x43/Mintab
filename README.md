@@ -1,8 +1,6 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/brandings/svg/appicon_black.svg#gh-light-mode-only" alt="Mintab icon" width="96" />
-  <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/brandings/svg/appicon_white.svg#gh-dark-mode-only" alt="Mintab icon" width="96" />
-
-  <h1>Mintab</h1>
+  <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/brandings/svg/icon_wordmark_black.svg#gh-light-mode-only" alt="Mintab icon" height="128" />
+  <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/brandings/svg/icon_wordmark_white.svg#gh-dark-mode-only" alt="Mintab icon" height="128" />
 
   <p><strong>Open to simplicity.</strong></p>
   <p>A calm, customizable new-tab experience for Chrome and Chromium-based browsers.</p>
@@ -18,7 +16,8 @@
 <br />
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/mintab/src/assets/hero.png" alt="Mintab new tab preview" width="900" />
+  <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/brandings/svg/icon_white.svg#gh-light-mode-only" alt="Mintab new tab preview" width="900" />
+  <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/brandings/svg/icon_white.svg#gh-dark-mode-only" alt="Mintab new tab preview" width="900" />
 </p>
 
 ## Why Mintab?
