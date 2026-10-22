@@ -16,6 +16,7 @@ export const DEFAULTS = {
   themeMode: 'dark',
   useCustomBackground: false,
   backgroundImage: '',
+  backgroundShade: 40,
   showSidebar: true,
   sidebarPosition: 'right',
   showCalendar: true,

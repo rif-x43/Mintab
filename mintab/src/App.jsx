@@ -14,7 +14,7 @@ import Bookmarks from './components/Bookmarks'
 function App() {
   useTheme()
   const {
-    useCustomBackground, backgroundImage,
+    useCustomBackground, backgroundImage, backgroundShade,
     showSidebar, sidebarPosition, keepSidebarExpanded,
   } = useSettings((s) => s.settings)
   const [sidebarOpen, setSidebarOpen] = useState(keepSidebarExpanded)
@@ -32,10 +32,13 @@ function App() {
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${backgroundImage})` }}
           />
-          <div className="absolute inset-0 bg-bg/40" />
+          <div
+            className="absolute inset-0 bg-bg transition-opacity duration-300"
+            style={{ opacity: backgroundShade / 100 }}
+          />
         </>
       )}
-            {/* Watermark */}
+      {/* Watermark */}
       <img
         src={iconWhite}
         alt=""
@@ -58,7 +61,6 @@ function App() {
           <Sidebar isOpen={sidebarOpen} />
         </>
       )}
-      
       <Settings
         open={settingsOpen}
         onClose={() => {
