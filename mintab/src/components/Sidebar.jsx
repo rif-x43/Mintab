@@ -192,8 +192,21 @@ const formatDue = (iso, hour12 = true) => {
 function Tasks() {
     const { sidebarPosition, clockFormat } = useSettings((s) => s.settings)
     const hour12 = clockFormat === '12h'
-
     const [tasks, setTasks] = useState([])
+    const [loaded, setLoaded] = useState(false)
+
+    useEffect(() => {
+        chrome.storage.local.get(['mintab_tasks'], (result) => {
+            if (result.mintab_tasks) setTasks(result.mintab_tasks)
+            setLoaded(true)
+        })
+    }, [])
+
+    useEffect(() => {
+        if (!loaded) return
+        chrome.storage.local.set({ mintab_tasks: tasks })
+    }, [tasks, loaded])
+
     const [name, setName] = useState('')
     const [deadline, setDeadline] = useState(null) // Date | null
     const [adding, setAdding] = useState(false)

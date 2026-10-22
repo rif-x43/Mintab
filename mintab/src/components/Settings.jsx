@@ -396,7 +396,7 @@ function BackupTab({ saved, onImport }) {
 
 /* ---------- About tab ---------- */
 
-const VERSION = '1.0.0'
+const VERSION = '1.0.1'
 
 // Leave a url empty and its icon shows dimmed and unclickable
 const LINKS = [
