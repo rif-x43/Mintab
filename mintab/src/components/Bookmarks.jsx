@@ -2,16 +2,6 @@ import { useEffect, useState } from 'react'
 import { Bookmark, Folder, FolderOpen, Link } from 'lucide-react'
 import { useSettings } from '../store/settings'
 
-const MOCK = [
-  { id: '1', title: 'Bookmarks bar', children: [
-    { id: '10', title: 'AUST', children: [] },
-    { id: '11', title: 'Competitive Programming', children: [
-      { id: '110', title: 'CSES Problemset', url: 'https://cses.fi/problemset/' },
-    ] },
-    { id: '12', title: 'Capture The Flag', children: [] },
-  ] },
-  { id: '2', title: 'Other bookmarks', children: [] },
-]
 
 const api = () => globalThis.chrome?.bookmarks
 
@@ -20,10 +10,7 @@ export function useBookmarks() {
 
   useEffect(() => {
     const bm = api()
-    if (!bm) {
-      setRoots(MOCK) // dev server fallback
-      return
-    }
+    if (!bm) return // not running as an extension
     const load = () => bm.getTree(([root]) => setRoots(root.children ?? []))
     load()
     const events = [bm.onCreated, bm.onRemoved, bm.onChanged, bm.onMoved]
@@ -84,6 +71,7 @@ export default function Bookmarks() {
   const { showBookmarks, expandBookmarks, bookmarkFolder } = useSettings((s) => s.settings)
   const folder = bookmarkFolder ?? 'all'
   const roots = useBookmarks()
+  console.log({ showBookmarks, roots })
 
   if (!showBookmarks) return null
 
