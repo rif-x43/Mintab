@@ -232,47 +232,59 @@ function AppearanceTab({ draft, set }) {
             checked={draft.useCustomBackground}
             onChange={(v) => {
               set('useCustomBackground', v)
-              // Unchecking clears the stored image so it doesn't silently persist
               if (!v) set('backgroundImage', '')
             }}
           />
         </Row>
 
-        {/* Upload row — uses Row for consistent indent + dim behaviour */}
-        <Row label="Background Image" sub dim={!draft.useCustomBackground}>
-          <div className="flex items-center gap-2">
-            {/* Thumbnail + remove button — only when an image is set */}
-            {hasImage && (
-              <div className="relative w-[72px] h-10 rounded-[5px] overflow-hidden group">
-                <img src={draft.backgroundImage} alt="" className="w-full h-full object-cover" />
-                {/* Remove overlay */}
+        {/* Sub-rows grouped with breathing room */}
+        <div className="flex flex-col gap-2 mt-1">
+          <Row label="Background Image" sub dim={!draft.useCustomBackground}>
+            <div className="flex items-center gap-2">
+              {hasImage && (
+                <div className="relative w-[72px] h-10 rounded-[5px] overflow-hidden group">
+                  <img src={draft.backgroundImage} alt="" className="w-full h-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={removeImage}
+                    className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                    aria-label="Remove background image"
+                  >
+                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={() => fileRef.current?.click()}
+                className="h-10 px-3 bg-card rounded-[5px] flex items-center gap-2 text-base cursor-pointer hover:opacity-80 transition-opacity"
+                aria-label="Upload background image"
+              >
+                {ImageUploadIcon}
+                <span>{hasImage ? 'Replace' : 'Upload'}</span>
+              </button>
+              <input ref={fileRef} type="file" accept="image/*" onChange={onFile} className="hidden" />
+            </div>
+          </Row>
+
+          <Row label="Background Shade" sub dim={!draft.useCustomBackground || !hasImage}>
+            <div className="flex h-6 bg-card rounded-[5px] p-0.5 gap-2px">
+              {[0, 20, 40, 60, 80].map((v) => (
                 <button
+                  key={v}
                   type="button"
-                  onClick={removeImage}
-                  className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                  aria-label="Remove background image"
+                  onClick={() => set('backgroundShade', v)}
+                  className={`w-10 rounded-[3px] text-xs leading-none cursor-pointer transition-colors
+                    ${draft.backgroundShade === v ? 'bg-fg text-bg' : 'text-fg hover:opacity-80'}`}
                 >
-                  <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  {v}%
                 </button>
-              </div>
-            )}
-
-            {/* Upload button */}
-            <button
-              type="button"
-              onClick={() => fileRef.current?.click()}
-              className="h-10 px-3 bg-card rounded-[5px] flex items-center gap-2 text-base cursor-pointer hover:opacity-80 transition-opacity"
-              aria-label="Upload background image"
-            >
-              {ImageUploadIcon}
-              <span>{hasImage ? 'Replace' : 'Upload'}</span>
-            </button>
-
-            <input ref={fileRef} type="file" accept="image/*" onChange={onFile} className="hidden" />
-          </div>
-        </Row>
+              ))}
+            </div>
+          </Row>
+        </div>
       </div>
     </div>
   )
