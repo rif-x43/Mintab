@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Bookmark, Folder, FolderOpen, Link } from 'lucide-react'
 import { useSettings } from '../store/settings'
 
-
 const api = () => globalThis.chrome?.bookmarks
 
 export function useBookmarks() {
@@ -39,9 +38,9 @@ export function folderOptions(nodes, depth = 0) {
   )
 }
 
-function BookmarkNode({ node, expand }) {
-  const [open, setOpen] = useState(!!expand)
-  const row = 'flex items-center gap-2 py-0.5 text-left text-fg/50 hover:text-fg transition-colors'
+function BookmarkNode({ node }) {
+  const [open, setOpen] = useState(false)
+  const row = 'flex items-center gap-2 py-0.5 text-left text-fg/50 hover:text-fg transition-colors cursor-pointer'
 
   if (node.url) {
     return (
@@ -60,7 +59,9 @@ function BookmarkNode({ node, expand }) {
       </button>
       {open && (
         <div className="ml-4 flex flex-col">
-          {node.children?.map((c) => <BookmarkNode key={c.id} node={c} expand={expand} />)}
+          {node.children?.length
+            ? node.children.map((c) => <BookmarkNode key={c.id} node={c} />)
+            : <span className="py-0.5 text-fg/30 text-base">Empty</span>}
         </div>
       )}
     </div>
@@ -71,22 +72,40 @@ export default function Bookmarks() {
   const { showBookmarks, expandBookmarks, bookmarkFolder } = useSettings((s) => s.settings)
   const folder = bookmarkFolder ?? 'all'
   const roots = useBookmarks()
-  console.log({ showBookmarks, roots })
+  const [pinned, setPinned] = useState(!!expandBookmarks)
+  const [hovered, setHovered] = useState(false)
+
+  useEffect(() => setPinned(!!expandBookmarks), [expandBookmarks])
 
   if (!showBookmarks) return null
 
   const selected = folder === 'all' ? null : findNode(roots, folder)
   const items = selected ? selected.children ?? [] : roots.flatMap((r) => r.children ?? [])
   const title = selected?.title || 'All Bookmarks'
+  const expanded = pinned || hovered
 
   return (
-    <div className="fixed top-6 left-6 z-10 max-w-[280px] text-lg">
-      <div className="flex items-center gap-2 text-fg text-xl">
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="fixed top-6 left-6 z-10 w-[280px] text-lg"
+    >
+      <button
+        onClick={() => setPinned((p) => !p)}
+        aria-expanded={expanded}
+        className="flex items-center gap-2 text-fg text-xl cursor-pointer hover:opacity-80 transition-opacity"
+      >
         <Bookmark size={18} />
         <span>{title}</span>
-      </div>
-      <div key={`${expandBookmarks}-${folder}`} className="ml-6 mt-1 flex flex-col">
-        {items.map((n) => <BookmarkNode key={n.id} node={n} expand={expandBookmarks} />)}
+      </button>
+
+      {/* Smooth expand/collapse */}
+      <div className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+        <div className="overflow-hidden">
+          <div className="ml-6 mt-1 flex flex-col max-h-[calc(100vh-9rem)] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {items.map((n) => <BookmarkNode key={n.id} node={n} />)}
+          </div>
+        </div>
       </div>
     </div>
   )
