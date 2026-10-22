@@ -270,13 +270,13 @@ function AppearanceTab({ draft, set }) {
           </Row>
 
           <Row label="Background Shade" sub dim={!draft.useCustomBackground || !hasImage}>
-            <div className="flex h-6 bg-card rounded-[5px] p-0.5 gap-2px">
+            <div className="flex h-6 bg-card rounded-[5px] p-0.5 gap-0.5">
               {[0, 20, 40, 60, 80].map((v) => (
                 <button
                   key={v}
                   type="button"
                   onClick={() => set('backgroundShade', v)}
-                  className={`w-10 rounded-[3px] text-xs leading-none cursor-pointer transition-colors
+                  className={`w-12 pt-1 rounded-[3px] text-base leading-none cursor-pointer transition-colors
                     ${draft.backgroundShade === v ? 'bg-fg text-bg' : 'text-fg hover:opacity-80'}`}
                 >
                   {v}%
