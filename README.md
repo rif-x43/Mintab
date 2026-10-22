@@ -6,18 +6,17 @@
   <p>A calm, customizable new-tab experience for Chrome and Chromium-based browsers.</p>
 
   <p>
-    <a href="https://github.com/rif-x43/Mintab/releases/tag/v1.0.0"><img src="https://img.shields.io/github/v/release/rif-x43/Mintab?style=flat-square&color=111111" alt="Latest release" /></a>
+    <a href="https://github.com/rif-x43/Mintab/releases/tag/v1.0.1"><img src="https://img.shields.io/github/v/release/rif-x43/Mintab?style=flat-square&color=111111" alt="Latest release" /></a>
     <a href="https://github.com/rif-x43/Mintab/issues"><img src="https://img.shields.io/github/issues/rif-x43/Mintab?style=flat-square&color=111111" alt="Open issues" /></a>
     <a href="https://github.com/rif-x43/Mintab/blob/main/mintab/public/manifest.json"><img src="https://img.shields.io/badge/Manifest-V3-111111?style=flat-square" alt="Manifest V3" /></a>
-    <a href="https://github.com/rif-x43/Mintab/releases/tag/v1.0.0"><img src="https://img.shields.io/badge/status-v1.0.0-111111?style=flat-square" alt="Version 1.0.0" /></a>
+    <a href="https://github.com/rif-x43/Mintab/releases/tag/v1.0.0"><img src="https://img.shields.io/badge/status-v1.0.1-111111?style=flat-square" alt="Version 1.0.1" /></a>
   </p>
 </div>
 
 <br />
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/brandings/svg/icon_white.svg#gh-light-mode-only" alt="Mintab new tab preview" width="900" />
-  <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/brandings/svg/icon_white.svg#gh-dark-mode-only" alt="Mintab new tab preview" width="900" />
+  <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/brandings/svg/logo-3d.svg" alt="Mintab new tab preview" width="900" />
 </p>
 
 ## Why Mintab?
@@ -44,34 +43,33 @@ It is intentionally minimal, fully customizable, and local-first by design.
 
 > Add your polished product captures to `docs/screenshots/` and replace the placeholder paths below. Keeping screenshots in the repository makes the README feel alive and gives future contributors a visual contract for the interface.
 
-<table>
-  <tr>
-    <td width="50%">
-      <img src="docs/screenshots/overview.png" alt="Mintab overview placeholder" />
-      <p align="center"><sub><strong>Overview</strong> · clock, weather, bookmarks, and a focused canvas</sub></p>
-    </td>
-    <td width="50%">
-      <img src="docs/screenshots/sidebar.png" alt="Mintab sidebar placeholder" />
-      <p align="center"><sub><strong>Sidebar</strong> · calendar and tasks, positioned where you want them</sub></p>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%">
-      <img src="docs/screenshots/settings.png" alt="Mintab settings placeholder" />
-      <p align="center"><sub><strong>Settings</strong> · general, appearance, sidebar, backup, and about</sub></p>
-    </td>
-    <td width="50%">
-      <img src="docs/screenshots/custom-background.png" alt="Mintab custom background placeholder" />
-      <p align="center"><sub><strong>Personalized</strong> · custom backgrounds with adjustable contrast</sub></p>
-    </td>
-  </tr>
-</table>
+<div align="center">
+  <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/brandings/screenshots/screenshot-overview.png" width="90%" />
+  <p><sub>Mintab — a minimal new tab for focused browsing</sub></p>
+</div>
+
+<br />
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/brandings/screenshots/screenshot-sidebar.png" width="30%" />
+  &nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/brandings/screenshots/screenshot-settings.png" width="30%" />
+  &nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/brandings/screenshots/screenshot-customtheme.png" width="30%" />
+</div>
+<div align="center">
+  <sub><b>Sidebar</b></sub>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <sub><b>Settings</b></sub>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <sub><b>Custom</b></sub>
+</div>
 
 ## Install the latest release
 
-Mintab is currently distributed as an unpacked browser extension. The fastest way to try it is the packaged `v1.0.0` release.
+Mintab is currently distributed as an unpacked browser extension. The fastest way to try it is the packaged `v1.0.1` release.
 
-1. Download **[`Mintab.v1.0.0.zip`](https://github.com/rif-x43/Mintab/releases/download/v1.0.0/Mintab.v1.0.0.zip)** from the [latest release](https://github.com/rif-x43/Mintab/releases/tag/v1.0.0).
+1. Download **[`Mintab.v1.0.1.zip`](https://github.com/rif-x43/Mintab/releases/download/v1.0.1/Mintab.v1.0.1.zip)** from the [latest release](https://github.com/rif-x43/Mintab/releases/tag/v1.0.1).
 2. Extract the archive to a permanent folder. Do not delete or move this folder after installation.
 3. Open `chrome://extensions` in Chrome, or the equivalent extensions page in your Chromium-based browser.
 4. Enable **Developer mode**.
@@ -159,9 +157,9 @@ Mintab/
 
 ## Release
 
-### v1.0.0 · Open to Simplicity
+### v1.0.1 · Open to Simplicity
 
-The first public Mintab release includes:
+The Mintab release includes:
 
 - Clock and date customization with 12-hour / 24-hour formats
 - Weather in Celsius or Fahrenheit
@@ -173,7 +171,7 @@ The first public Mintab release includes:
 - Settings backup and restore
 - Explicit **Save Changes** and **Reset to Default** controls
 
-See the full [v1.0.0 release notes](https://github.com/rif-x43/Mintab/releases/tag/v1.0.0).
+See the full [v1.0.1 release notes](https://github.com/rif-x43/Mintab/releases/tag/v1.0.1).
 
 ## Contributing
 
