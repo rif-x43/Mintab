@@ -41,8 +41,6 @@ It is intentionally minimal, fully customizable, and local-first by design.
 
 ## Screenshots
 
-> Add your polished product captures to `docs/screenshots/` and replace the placeholder paths below. Keeping screenshots in the repository makes the README feel alive and gives future contributors a visual contract for the interface.
-
 <div align="center">
   <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/brandings/screenshots/screenshot-overview.png" width="90%" />
   <p><sub>Mintab — a minimal new tab for focused browsing</sub></p>
