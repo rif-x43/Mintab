@@ -16,7 +16,8 @@
 <br />
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/brandings/svg/logo-3d.svg" alt="Mintab new tab preview" width="900" />
+  <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/brandings/svg/logo-3d_black.svg#gh-dark-mode-only" alt="Mintab new tab preview" width="900" />
+  <img src="https://raw.githubusercontent.com/rif-x43/Mintab/main/brandings/svg/logo-3d_white.svg#gh-light-mode-only" alt="Mintab new tab preview" width="900" />
 </p>
 
 ## Why Mintab?
