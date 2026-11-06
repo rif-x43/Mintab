@@ -15,5 +15,9 @@
         "bookmarks",
         "storage",
         "geolocation"
+    ],
+    "host_permissions": [
+        "https://gist.githubusercontent.com/*",
+        "https://countapi.mileshilliard.com/*"
     ]
 }

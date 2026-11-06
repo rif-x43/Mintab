@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useSettings } from '../store/settings'
+import { storage } from '../utils/storage'
 
 function Calendar({ picker = false, selected = null, onSelect }) {
     const [current, setCurrent] = useState(selected ?? new Date())
@@ -195,18 +196,17 @@ function Tasks() {
     const [tasks, setTasks] = useState([])
     const [loaded, setLoaded] = useState(false)
 
-    useEffect(() => {
-        chrome.storage.local.get(['mintab_tasks'], (result) => {
-            if (result.mintab_tasks) setTasks(result.mintab_tasks)
-            setLoaded(true)
-        })
+   useEffect(() => {
+    storage.get('mintab_tasks').then((saved) => {
+        if (saved) setTasks(saved)
+        setLoaded(true)
+    })
     }, [])
 
     useEffect(() => {
         if (!loaded) return
-        chrome.storage.local.set({ mintab_tasks: tasks })
+        storage.set('mintab_tasks', tasks)
     }, [tasks, loaded])
-
     const [name, setName] = useState('')
     const [deadline, setDeadline] = useState(null) // Date | null
     const [adding, setAdding] = useState(false)

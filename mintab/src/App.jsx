@@ -10,9 +10,20 @@ import { useTheme } from './hooks/useTheme'
 import iconWhite from './assets/icon_white.svg'
 import iconBlack from './assets/icon_black.svg'
 import Bookmarks from './components/Bookmarks'
+import { useNotifications } from './store/notifications'
+import { pingDailyUser } from './utils/pingDau'
 
 function App() {
   useTheme()
+  useEffect(() => { pingDailyUser() }, [])
+  
+  useEffect(() => {
+  const fetchNow = () => useNotifications.getState().fetchNotifications()
+  fetchNow()
+  const t = setInterval(fetchNow, 30 * 60 * 1000)
+  return () => clearInterval(t)
+  }, [])
+
   const {
     useCustomBackground, backgroundImage, backgroundShade,
     showSidebar, sidebarPosition, keepSidebarExpanded,
