@@ -488,12 +488,14 @@ const GearIcon = (
 )
 
 export default function Settings({ open, onClose }) {
+
   const saved = useSettings((s) => s.settings)
   const saveSettings = useSettings((s) => s.saveSettings)
 
   const [tab, setTab] = useState('General')
   const [view, setView] = useState('settings') // 'settings' | 'notifications'
   const [draft, setDraft] = useState(saved)
+  const panelRef = useRef(null)
 
   const unread = useHasUnread()
   const items = useNotifications((s) => s.items)
@@ -523,9 +525,22 @@ export default function Settings({ open, onClose }) {
     return () => window.removeEventListener('keydown', onKey)
   }, [open, onClose])
 
+  useEffect(() => {
+  if (!open) return
+  const onDown = (e) => {
+    if (panelRef.current?.contains(e.target)) return
+    // let the gear button handle its own toggle
+    if (e.target.closest?.('[aria-label="Open settings"]')) return
+    onClose()
+  }
+  document.addEventListener('mousedown', onDown)
+  return () => document.removeEventListener('mousedown', onDown)
+}, [open, onClose])
+
   return (
     <div className="pointer-events-none fixed inset-0 z-[60] flex items-center justify-end overflow-hidden pr-[5%]">
       <div
+        ref={panelRef}   
         aria-hidden={!open}
         className={`w-[845px] h-[890px] max-w-[90vw] max-h-[95vh] bg-card rounded-2xl flex flex-col pt-[33px] pb-8 text-fg
           transition-[translate,visibility] duration-500 ease-in-out
