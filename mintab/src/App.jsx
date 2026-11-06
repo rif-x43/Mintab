@@ -16,11 +16,11 @@ import { pingDailyUser } from './utils/pingDau'
 function App() {
   useTheme()
   useEffect(() => { pingDailyUser() }, [])
-  
+
   useEffect(() => {
   const fetchNow = () => useNotifications.getState().fetchNotifications()
   fetchNow()
-  const t = setInterval(fetchNow, 30 * 60 * 1000)
+  const t = setInterval(fetchNow, 1 * 60 * 1000)
   return () => clearInterval(t)
   }, [])
 
