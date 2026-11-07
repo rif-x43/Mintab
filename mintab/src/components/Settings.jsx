@@ -170,6 +170,21 @@ function fileToDataUrl(file, maxSize = 1920) {
   })
 }
 
+const MAX_GIF = 40 * 1024 * 1024 // 3 MB, since it's stored in localStorage
+
+function readAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader()
+    r.onload = () => resolve(r.result)
+    r.onerror = reject
+    r.readAsDataURL(file)
+  })
+}
+
+// GIFs keep their original bytes so they stay animated
+const fileToBackground = (file) =>
+  file.type === 'image/gif' ? readAsDataUrl(file) : fileToDataUrl(file)
+
 const SunIcon = (
   <svg className="w-4 h-4 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
     <circle cx="12" cy="12" r="4" />
@@ -194,15 +209,22 @@ const ImageUploadIcon = (
 function AppearanceTab({ draft, set }) {
   const fileRef = useRef(null)
 
+  const [error, setError] = useState('')
+
   const onFile = async (e) => {
     const file = e.target.files?.[0]
     e.target.value = ''
     if (!file) return
+    if (file.type === 'image/gif' && file.size > MAX_GIF) {
+      setError('GIF is too large. Max 3 MB.')
+      return
+    }
     try {
-      set('backgroundImage', await fileToDataUrl(file))
+      set('backgroundImage', await fileToBackground(file))
       set('useCustomBackground', true)
+      setError('')
     } catch {
-      /* ignore invalid image */
+      setError('Could not load that image.')
     }
   }
 
@@ -270,6 +292,8 @@ function AppearanceTab({ draft, set }) {
               <input ref={fileRef} type="file" accept="image/*" onChange={onFile} className="hidden" />
             </div>
           </Row>
+
+          {error && <p className="pl-8 text-base text-red-400">{error}</p>}
 
           <Row label="Background Shade" sub dim={!draft.useCustomBackground || !hasImage}>
             <div className="flex h-6 bg-card rounded-[5px] p-0.5 gap-0.5">
