@@ -216,7 +216,7 @@ function AppearanceTab({ draft, set }) {
     e.target.value = ''
     if (!file) return
     if (file.type === 'image/gif' && file.size > MAX_GIF) {
-      setError('GIF is too large. Max 3 MB.')
+      setError('GIF is too large. Max 40 MB.')
       return
     }
     try {
