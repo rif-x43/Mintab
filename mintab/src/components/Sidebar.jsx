@@ -242,8 +242,14 @@ function Tasks() {
                 done: false,
             },
         ])
+        
         cancel()
     }
+
+    const done = () => {
+    if (name.trim()) add()      // add() also closes the picker and resets the form
+    else setPickerOpen(false)   // no name yet: just close the picker
+        }
 
     // date and time are picked independently; the other half falls back to "now"
     const base = deadline ?? new Date()
@@ -360,11 +366,11 @@ function Tasks() {
                             Clear
                         </button>
                         <button
-                            type="button"
-                            onClick={() => setPickerOpen(false)}
-                            className="h-6.5 px-3 bg-item rounded-[9px] text-fg text-sm cursor-pointer"
+                        type="button"
+                        onClick={done}
+                        className="h-6.5 px-3 bg-item rounded-[9px] text-fg text-sm cursor-pointer"
                         >
-                            Done
+                        Done
                         </button>
                     </div>
                 </div>
@@ -381,6 +387,7 @@ export default function Sidebar({ isOpen }) {
 
   return (
     <aside
+        key={sidebarPosition} 
       style={{ '--card-w': 'clamp(400px, 20vw, 480px)' }}
       className={`
         absolute top-0 h-full

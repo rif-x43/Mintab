@@ -38,9 +38,10 @@ export function folderOptions(nodes, depth = 0) {
   )
 }
 
-function BookmarkNode({ node }) {
+function BookmarkNode({ node, flip }) {
   const [open, setOpen] = useState(false)
-  const row = 'flex items-center gap-2 py-0.5 text-left text-fg/50 hover:text-fg transition-colors cursor-pointer'
+  const row = `flex items-center gap-2 py-0.5 text-fg/50 hover:text-fg transition-colors cursor-pointer
+    ${flip ? 'flex-row-reverse text-right' : 'text-left'}`
 
   if (node.url) {
     return (
@@ -53,15 +54,15 @@ function BookmarkNode({ node }) {
 
   return (
     <div>
-      <button onClick={() => setOpen((o) => !o)} className={row}>
+      <button onClick={() => setOpen((o) => !o)} className={`${row} w-full`}>
         {open ? <FolderOpen size={14} className="shrink-0" /> : <Folder size={14} className="shrink-0" />}
         <span className="truncate">{node.title || 'Untitled'}</span>
       </button>
       {open && (
-        <div className="ml-4 flex flex-col">
+        <div className={`flex flex-col ${flip ? 'mr-4' : 'ml-4'}`}>
           {node.children?.length
-            ? node.children.map((c) => <BookmarkNode key={c.id} node={c} />)
-            : <span className="py-0.5 text-fg/30 text-base">Empty</span>}
+            ? node.children.map((c) => <BookmarkNode key={c.id} node={c} flip={flip} />)
+            : <span className={`py-0.5 text-fg/30 text-base ${flip ? 'text-right' : ''}`}>Empty</span>}
         </div>
       )}
     </div>
@@ -69,7 +70,11 @@ function BookmarkNode({ node }) {
 }
 
 export default function Bookmarks() {
-  const { showBookmarks, expandBookmarks, bookmarkFolder } = useSettings((s) => s.settings)
+ const { showBookmarks, expandBookmarks, bookmarkFolder, showSidebar, sidebarPosition, showCalendar, showTasks } =
+  useSettings((s) => s.settings)
+
+  // bookmarks move to the right when the sidebar is on the left
+  const flip = showSidebar && sidebarPosition === 'left' && (showCalendar || showTasks)
   const folder = bookmarkFolder ?? 'all'
   const roots = useBookmarks()
   const [pinned, setPinned] = useState(!!expandBookmarks)
@@ -85,28 +90,30 @@ export default function Bookmarks() {
   const expanded = pinned || hovered
 
   return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className="fixed top-6 left-6 z-10 w-[280px] text-lg"
+  <div
+    onMouseEnter={() => setHovered(true)}
+    onMouseLeave={() => setHovered(false)}
+    className={`fixed top-6 z-10 w-[280px] text-lg ${flip ? 'right-6' : 'left-6'}`}
+  >
+    <button
+      onClick={() => setPinned((p) => !p)}
+      aria-expanded={expanded}
+      className={`flex items-center gap-2 text-fg text-xl cursor-pointer hover:opacity-80 transition-opacity
+        ${flip ? 'flex-row-reverse ml-auto' : ''}`}
     >
-      <button
-        onClick={() => setPinned((p) => !p)}
-        aria-expanded={expanded}
-        className="flex items-center gap-2 text-fg text-xl cursor-pointer hover:opacity-80 transition-opacity"
-      >
-        <Bookmark size={18} />
-        <span>{title}</span>
-      </button>
+      <Bookmark size={18} />
+      <span>{title}</span>
+    </button>
 
-      {/* Smooth expand/collapse */}
-      <div className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
-        <div className="overflow-hidden">
-          <div className="ml-6 mt-1 flex flex-col max-h-[calc(100vh-9rem)] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {items.map((n) => <BookmarkNode key={n.id} node={n} />)}
-          </div>
+    {/* Smooth expand/collapse */}
+    <div className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+      <div className="overflow-hidden">
+        <div className={`mt-1 flex flex-col max-h-[calc(100vh-9rem)] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
+          ${flip ? 'mr-6' : 'ml-6'}`}>
+          {items.map((n) => <BookmarkNode key={n.id} node={n} flip={flip} />)}
         </div>
       </div>
     </div>
+  </div>
   )
 }
