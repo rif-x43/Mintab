@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { RotateCcw } from 'lucide-react'
 import { useSettings, DEFAULTS, CITIES } from '../store/settings'
 import { formatDate, DATE_FORMATS } from '../utils/formatDate'
 import { useBookmarks, folderOptions } from './Bookmarks'
@@ -740,9 +741,7 @@ export default function Settings({ open, onClose }) {
                 onClick={() => setDraft(DEFAULTS)}
                 className="h-12 px-6 bg-item rounded-2xl flex items-center gap-2 text-lg cursor-pointer hover:opacity-80"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992V4.356M2.985 19.644v-4.992h4.992m10.9-3.652a8.25 8.25 0 00-14.37-2.1M3.12 13a8.25 8.25 0 0014.37 2.1" />
-                </svg>
+                <RotateCcw size={16} strokeWidth={1.5} />
                 Reset to Default
               </button>
             </div>

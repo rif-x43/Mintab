@@ -4,6 +4,7 @@ import { useClockTools, readValue } from '../store/clockTools'
 import { formatDate } from '../utils/formatDate'
 import { formatDuration } from '../utils/formatDuration'
 import { playAlarm } from '../utils/alarm'
+import { Hourglass, Timer, Play, Pause, RotateCcw, X } from 'lucide-react'
 
 /* ---------- hooks ---------- */
 function useNow(active) {
@@ -54,53 +55,14 @@ const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n))
 
 /* ---------- icons + small pieces ---------- */
 
-function Icon({ children }) {
-  return (
-    <svg
-      className="w-5 h-5"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={1.6}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      {children}
-    </svg>
-  )
-}
+const iconProps = { size: 20, strokeWidth: 1.5 }
 
-const StopwatchIcon = (
-  <Icon>
-    <circle cx="12" cy="13" r="8" />
-    <path d="M12 9v4l2.5 2.5M9.5 2h5" />
-  </Icon>
-)
-const TimerIcon = (
-  <Icon>
-    <path d="M6 2h12M6 22h12M7 2v4a5 5 0 002 4l3 2-3 2a5 5 0 00-2 4v4M17 2v4a5 5 0 01-2 4l-3 2 3 2a5 5 0 012 4v4" />
-  </Icon>
-)
-const PlayIcon = (
-  <Icon>
-    <path d="M8 5v14l11-7z" />
-  </Icon>
-)
-const PauseIcon = (
-  <Icon>
-    <path d="M9 5v14M15 5v14" />
-  </Icon>
-)
-const ResetIcon = (
-  <Icon>
-    <path d="M16.023 9.348h4.992V4.356M2.985 19.644v-4.992h4.992m10.9-3.652a8.25 8.25 0 00-14.37-2.1M3.12 13a8.25 8.25 0 0014.37 2.1" />
-  </Icon>
-)
-const CloseIcon = (
-  <Icon>
-    <path d="M6 18L18 6M6 6l12 12" />
-  </Icon>
-)
+const TimerIcon = <Hourglass {...iconProps} />
+const StopwatchIcon = <Timer {...iconProps} />
+const PlayIcon = <Play {...iconProps} />
+const PauseIcon = <Pause {...iconProps} />
+const ResetIcon = <RotateCcw {...iconProps} />
+const CloseIcon = <X {...iconProps} />
 
 function IconBtn({ label, onClick, children }) {
   return (
