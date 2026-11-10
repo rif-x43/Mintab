@@ -248,12 +248,11 @@ export default function Clock({ shifted = false }) {
   // Live value in the tab title while this tab is in the background
   useEffect(() => {
     if (hidden && active && clockTitleTimer) {
-      const icon = !running ? '⏸' : mode === 'timer' ? '⏳' : '⏱'
-      document.title = finished ? '⏰ Time’s up!' : `${icon} ${label}`
+      document.title = finished ? 'Time’s up' : running ? label : `${label} (paused)`
     } else {
       document.title = originalTitle.current
     }
-  }, [hidden, active, clockTitleTimer, mode, running, finished, label])
+  }, [hidden, active, clockTitleTimer, running, finished, label])
 
   useEffect(() => {
     const original = originalTitle.current
@@ -299,42 +298,52 @@ export default function Clock({ shifted = false }) {
     >
       {active ? (
         <>
-          <time className="text-fg text-8xl font-normal tracking-wide tabular-nums">
-            {finished ? '00:00' : label}
-          </time>
-          <p className="min-h-6 text-fg text-base tracking-[1.98px]">
-            {finished ? 'Time’s up' : !running ? 'Paused' : ''}
-          </p>
+          <div className="relative">
+            <time className="block text-fg text-8xl font-normal tracking-wide tabular-nums">
+              {finished ? '00:00' : label}
+            </time>
 
-          <div className="flex items-center gap-2">
-            {finished ? (
-              <IconBtn label="Restart timer" onClick={() => { reset(); resume() }}>
-                {ResetIcon}
-              </IconBtn>
-            ) : (
-              <>
-                <IconBtn label={running ? 'Pause' : 'Resume'} onClick={running ? pause : resume}>
-                  {running ? PauseIcon : PlayIcon}
+            {/* Buttons and small time/date hang right under the timer */}
+            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-max flex flex-col items-center gap-2">
+              <div className="flex items-center gap-2">
+                {finished ? (
+                  <IconBtn label="Restart timer" onClick={() => { reset(); resume() }}>
+                    {ResetIcon}
+                  </IconBtn>
+                ) : (
+                  <>
+                    <IconBtn label={running ? 'Pause' : 'Resume'} onClick={running ? pause : resume}>
+                      {running ? PauseIcon : PlayIcon}
+                    </IconBtn>
+                    <IconBtn label="Reset" onClick={reset}>
+                      {ResetIcon}
+                    </IconBtn>
+                  </>
+                )}
+                <IconBtn label="Close" onClick={close}>
+                  {CloseIcon}
                 </IconBtn>
-                <IconBtn label="Reset" onClick={reset}>
-                  {ResetIcon}
-                </IconBtn>
-              </>
-            )}
-            <IconBtn label="Close" onClick={close}>
-              {CloseIcon}
-            </IconBtn>
+              </div>
+
+              <p className="flex items-center gap-4 text-fg text-sm tracking-wide">
+                {(finished || !running) && <span>{finished ? 'Time’s up' : 'Paused'}</span>}
+                {showClock && (
+                  <span className="opacity-60">
+                    {hours}:{minutes}
+                    {is12 && ` ${period}`}
+                  </span>
+                )}
+                {showDate && <span className="opacity-60">{formatDate(time, dateFormat)}</span>}
+              </p>
+            </div>
           </div>
 
-          <p className="flex items-center gap-4 mt-3 text-fg text-sm opacity-60 tracking-wide">
-            {showClock && (
-              <span>
-                {hours}:{minutes}
-                {is12 && ` ${period}`}
-              </span>
-            )}
-            {showDate && <span>{formatDate(time, dateFormat)}</span>}
-          </p>
+          {/* Invisible copy of the date row, so the timer sits exactly where the clock does */}
+          {showDate && (
+            <time aria-hidden="true" className="invisible text-base font-normal tracking-[1.98px]">
+              {formatDate(time, dateFormat)}
+            </time>
+          )}
         </>
       ) : (
         <>
