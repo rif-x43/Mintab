@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { RotateCcw } from 'lucide-react'
 import { useSettings, DEFAULTS, CITIES } from '../store/settings'
 import { formatDate, DATE_FORMATS } from '../utils/formatDate'
 import { useBookmarks, folderOptions } from './Bookmarks'
@@ -69,6 +70,52 @@ function SelectBox({ value, options, onChange }) {
   )
 }
 
+function NumberInput({ value, onChange, min = -3000, max = 3000 }) {
+  const [text, setText] = useState(String(value))
+  useEffect(() => {
+    setText(String(value))
+  }, [value])
+
+  const commit = (raw) => {
+    const n = Number(raw)
+    if (raw.trim() === '' || Number.isNaN(n)) return
+    onChange(Math.min(max, Math.max(min, Math.round(n))))
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      <input
+        value={text}
+        inputMode="numeric"
+        onChange={(e) => {
+          setText(e.target.value)
+          commit(e.target.value)
+        }}
+        onBlur={() => setText(String(value))}
+        className="w-24 h-6 bg-card rounded-[5px] text-right px-2 text-base text-fg outline-none"
+      />
+      <span className="w-5 text-base opacity-60">px</span>
+    </div>
+  )
+}
+
+function Slider({ value, min, max, step, onChange, format }) {
+  return (
+    <div className="flex items-center gap-3">
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="w-48 accent-fg cursor-pointer"
+      />
+      <span className="w-12 text-right text-base">{format(value)}</span>
+    </div>
+  )
+}
+
 // A label row. `sub` indents it, `dim` fades + disables it.
 function Row({ label, sub, dim, children }) {
   return (
@@ -111,6 +158,50 @@ function GeneralTab({ draft, set }) {
         </Row>
         <Row label="Date Format" sub dim={!draft.showDate}>
           <SelectBox value={draft.dateFormat} options={dateOptions} onChange={(v) => set('dateFormat', v)} />
+        </Row>
+      </div>
+
+      <div>
+        <Row label="Timer & Stopwatch" dim={!draft.showClock}>
+          <Checkbox checked={draft.clockTools} onChange={(v) => set('clockTools', v)} />
+        </Row>
+        <Row label="Show Time in Tab Title" sub dim={!draft.showClock || !draft.clockTools}>
+          <Checkbox checked={draft.clockTitleTimer} onChange={(v) => set('clockTitleTimer', v)} />
+        </Row>
+      </div>
+
+      <div>
+        <Row label="Resize & Reposition Clock">
+          <Checkbox checked={draft.clockCustomLayout} onChange={(v) => set('clockCustomLayout', v)} />
+        </Row>
+        <Row label="Clock Size" sub dim={!draft.clockCustomLayout}>
+          <Slider
+            value={draft.clockScale}
+            min={0.5}
+            max={2}
+            step={0.05}
+            onChange={(v) => set('clockScale', v)}
+            format={(v) => `${v.toFixed(2)}×`}
+          />
+        </Row>
+        <Row label="Horizontal Position" sub dim={!draft.clockCustomLayout}>
+          <NumberInput value={draft.clockX} onChange={(v) => set('clockX', v)} />
+        </Row>
+        <Row label="Vertical Position" sub dim={!draft.clockCustomLayout}>
+          <NumberInput value={draft.clockY} onChange={(v) => set('clockY', v)} />
+        </Row>
+        <Row label="Reset Position" sub dim={!draft.clockCustomLayout}>
+          <button
+            type="button"
+            onClick={() => {
+              set('clockScale', DEFAULTS.clockScale)
+              set('clockX', DEFAULTS.clockX)
+              set('clockY', DEFAULTS.clockY)
+            }}
+            className="h-6 px-3 bg-card rounded-[5px] text-base cursor-pointer hover:opacity-80"
+          >
+            Reset
+          </button>
         </Row>
       </div>
 
@@ -650,9 +741,7 @@ export default function Settings({ open, onClose }) {
                 onClick={() => setDraft(DEFAULTS)}
                 className="h-12 px-6 bg-item rounded-2xl flex items-center gap-2 text-lg cursor-pointer hover:opacity-80"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992V4.356M2.985 19.644v-4.992h4.992m10.9-3.652a8.25 8.25 0 00-14.37-2.1M3.12 13a8.25 8.25 0 0014.37 2.1" />
-                </svg>
+                <RotateCcw size={16} strokeWidth={1.5} />
                 Reset to Default
               </button>
             </div>
