@@ -9,7 +9,7 @@
     <a href="https://github.com/rif-x43/Mintab/releases/tag/v1.0.1"><img src="https://img.shields.io/github/v/release/rif-x43/Mintab?style=flat-square&color=111111" alt="Latest release" /></a>
     <a href="https://github.com/rif-x43/Mintab/issues"><img src="https://img.shields.io/github/issues/rif-x43/Mintab?style=flat-square&color=111111" alt="Open issues" /></a>
     <a href="https://github.com/rif-x43/Mintab/blob/main/mintab/public/manifest.json"><img src="https://img.shields.io/badge/Manifest-V3-111111?style=flat-square" alt="Manifest V3" /></a>
-    <a href="https://github.com/rif-x43/Mintab/releases/tag/v1.0.0"><img src="https://img.shields.io/badge/status-v1.0.1-111111?style=flat-square" alt="Version 1.0.1" /></a>
+    <a href="https://github.com/rif-x43/Mintab/releases/tag/v1.1.0"><img src="https://img.shields.io/badge/status-v1.0.1-111111?style=flat-square" alt="Version 1.1.0" /></a>
   </p>
 </div>
 
