@@ -6,10 +6,9 @@
   <p>A calm, customizable new-tab experience for Chrome and Chromium-based browsers.</p>
 
   <p>
-    <a href="https://github.com/rif-x43/Mintab/releases/tag/v1.0.1"><img src="https://img.shields.io/github/v/release/rif-x43/Mintab?style=flat-square&color=111111" alt="Latest release" /></a>
+    <a href="https://github.com/rif-x43/Mintab/releases/tag/v1.1.0"><img src="https://img.shields.io/github/v/release/rif-x43/Mintab?style=flat-square&color=111111" alt="Latest release" /></a>
     <a href="https://github.com/rif-x43/Mintab/issues"><img src="https://img.shields.io/github/issues/rif-x43/Mintab?style=flat-square&color=111111" alt="Open issues" /></a>
     <a href="https://github.com/rif-x43/Mintab/blob/main/mintab/public/manifest.json"><img src="https://img.shields.io/badge/Manifest-V3-111111?style=flat-square" alt="Manifest V3" /></a>
-    <a href="https://github.com/rif-x43/Mintab/releases/tag/v1.1.0"><img src="https://img.shields.io/badge/status-v1.0.1-111111?style=flat-square" alt="Version 1.1.0" /></a>
   </p>
 </div>
 
@@ -68,7 +67,7 @@ It is intentionally minimal, fully customizable, and local-first by design.
 
 Mintab is currently distributed as an unpacked browser extension. The fastest way to try it is the packaged `v1.0.1` release.
 
-1. Download **[`Mintab.v1.0.1.zip`](https://github.com/rif-x43/Mintab/releases/download/v1.0.1/Mintab.v1.0.1.zip)** from the [latest release](https://github.com/rif-x43/Mintab/releases/tag/v1.0.1).
+1. Download **[`Mintab.v1.1.0.zip`](https://github.com/rif-x43/Mintab/releases/download/v1.1.0/Mintab.v1.1.0.zip)** from the [latest release](https://github.com/rif-x43/Mintab/releases/tag/v1.1.0).
 2. Extract the archive to a permanent folder. Do not delete or move this folder after installation.
 3. Open `chrome://extensions` in Chrome, or the equivalent extensions page in your Chromium-based browser.
 4. Enable **Developer mode**.
